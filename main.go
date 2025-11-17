@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -10,19 +11,13 @@ import (
 	"github.com/rodaine/table"
 )
 
-// (magic numbers)
-var signatures = map[string]string{
-	"JPEG": "FFD8FF",
-	"PNG":  "89504E47",
-	"PDF":  "25504446",
-	"ZIP":  "504B0304",
-	"RAR":  "526172211A07",
-	"7Z":   "377ABCAF271C",
-	"GZIP": "1F8B08",
-	"BMP":  "424D",
-	"MP4":  "0000002066747970",
-	"FLAC": "664C6143",
-	"ICO":  "00000100",
+type Signatures struct {
+	Signatures []Signature `json:"signatures"`
+}
+
+type Signature struct {
+	Extension    string `json:"extension"`
+	Magicnumbers string `json:"magicnumbers"`
 }
 
 func readFirstBytes(path string, n int) ([]byte, error) {
@@ -83,13 +78,22 @@ func main() {
 
 	tbl := table.New("Format", "Similarity")
 	tbl.WithHeaderFormatter(headerFmt).WithFirstColumnFormatter(columnFmt)
-	for format, sig := range signatures {
-		score := matchPercentage(bytes, sig)
+	jsonFile, err := os.Open("./signatures.json")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("Successfully Opened users.json")
+	defer jsonFile.Close()
+	byteValue, _ := io.ReadAll(jsonFile)
+	var signatures Signatures
+	json.Unmarshal(byteValue, &signatures)
+	for i := 0; i < len(signatures.Signatures); i++ {
+		score := matchPercentage(bytes, signatures.Signatures[i].Magicnumbers)
 		if score > bestScore {
 			bestScore = score
-			bestFormat = format
+			bestFormat = signatures.Signatures[i].Extension
 		}
-		tbl.AddRow(format, score)
+		tbl.AddRow(signatures.Signatures[i].Extension, score)
 	}
 	tbl.Print()
 	fmt.Printf("\nMost likely format: ")

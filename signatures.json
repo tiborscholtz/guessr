@@ -1,0 +1,36 @@
+{
+    "signatures": [{
+        "extension": "JPEG",
+        "magicnumbers": "FFD8FF"
+    }, {
+        "extension": "PNG",
+        "magicnumbers": "89504E47"
+    }, {
+        "extension": "PDF",
+        "magicnumbers": "25504446"
+    }, {
+        "extension": "ZIP",
+        "magicnumbers": "504B0304"
+    }, {
+        "extension": "RAR",
+        "magicnumbers": "526172211A07"
+    }, {
+        "extension": "7Z",
+        "magicnumbers": "377ABCAF271C"
+    }, {
+        "extension": "GZIP",
+        "magicnumbers": "1F8B08"
+    }, {
+        "extension": "BMP",
+        "magicnumbers": "424D"
+    }, {
+        "extension": "MP4",
+        "magicnumbers": "0000002066747970"
+    }, {
+        "extension": "FLAC",
+        "magicnumbers": "664C6143"
+    }, {
+        "extension": "ICO",
+        "magicnumbers": "00000100"
+    }]
+}
