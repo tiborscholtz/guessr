@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"io"
 	"os"
+
+	"github.com/fatih/color"
+	"github.com/rodaine/table"
 )
 
 // (magic numbers)
@@ -70,21 +73,25 @@ func main() {
 		return
 	}
 
-	fmt.Printf("Read bytes: % X\n\n", bytes)
-	fmt.Println("Format likelihoods:")
+	fmt.Printf("Read bytes: ")
+	color.Green("% X\n\n", bytes)
 
 	bestFormat := "Unknown"
 	bestScore := 0
+	headerFmt := color.New(color.FgHiWhite).SprintfFunc()
+	columnFmt := color.New(color.FgCyan).SprintfFunc()
 
+	tbl := table.New("Format", "Similarity")
+	tbl.WithHeaderFormatter(headerFmt).WithFirstColumnFormatter(columnFmt)
 	for format, sig := range signatures {
 		score := matchPercentage(bytes, sig)
 		if score > bestScore {
 			bestScore = score
 			bestFormat = format
 		}
-
-		fmt.Printf("  %-6s : %3d%% match (sig: %s)\n", format, score, sig)
+		tbl.AddRow(format, score)
 	}
-
-	fmt.Printf("\nMost likely format: %s (%d%%)\n", bestFormat, bestScore)
+	tbl.Print()
+	fmt.Printf("\nMost likely format: ")
+	color.Green("%s (%d%%)\n", bestFormat, bestScore)
 }
