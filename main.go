@@ -1,4 +1,3 @@
-package projects
 package main
 
 import (
@@ -18,7 +17,7 @@ var signatures = map[string]string{
 	"7Z":   "377ABCAF271C",
 	"GZIP": "1F8B08",
 	"BMP":  "424D",
-	"MP4":  "0000002066747970", // 'ftyp'
+	"MP4":  "0000002066747970",
 	"FLAC": "664C6143",
 	"ICO":  "00000100",
 }
