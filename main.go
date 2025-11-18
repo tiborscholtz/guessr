@@ -38,13 +38,12 @@ func readFirstBytes(path string, n int) ([]byte, error) {
 // Return a percentage based result
 func matchPercentage(fileBytes []byte, sigHex string) int {
 	sigBytes, _ := hex.DecodeString(sigHex)
-
 	if len(fileBytes) < len(sigBytes) {
 		return 0
 	}
 
 	matches := 0
-	for i := 0; i < len(sigBytes); i++ {
+	for i := range sigBytes {
 		if fileBytes[i] == sigBytes[i] {
 			matches++
 		}
@@ -62,7 +61,7 @@ func main() {
 	filename := os.Args[1]
 
 	// Read first 8 bytes for now
-	bytes, err := readFirstBytes(filename, 8)
+	bytes, err := readFirstBytes(filename, 50)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -82,13 +81,13 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("Successfully Opened users.json")
 	defer jsonFile.Close()
 	byteValue, _ := io.ReadAll(jsonFile)
 	var signatures Signatures
 	json.Unmarshal(byteValue, &signatures)
 	for i := 0; i < len(signatures.Signatures); i++ {
-		score := matchPercentage(bytes, signatures.Signatures[i].Magicnumbers)
+		slice := append([]byte(nil), bytes[0:len(signatures.Signatures[i].Magicnumbers)]...)
+		score := matchPercentage(slice, signatures.Signatures[i].Magicnumbers)
 		if score > bestScore {
 			bestScore = score
 			bestFormat = signatures.Signatures[i].Extension
