@@ -32,5 +32,14 @@
     }, {
         "extension": "ICO",
         "magicnumbers": "00000100"
+    }, {
+        "extension": "GIF87a",
+        "magicnumbers": "474946383761"
+    }, {
+        "extension": "GIF89a",
+        "magicnumbers": "474946383961"
+    }, {
+        "extension": "ICO",
+        "magicnumbers": "00000100"
     }]
 }
